@@ -6,6 +6,7 @@
 //
 
 import ArcGIS
+import CoreData
 import SwiftUI
 
 enum CreateType {
@@ -15,8 +16,34 @@ enum CreateType {
 }
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \GeometryModel.createdOn, ascending: true)],
+        animation: .default)
+    private var savedGeometries: FetchedResults<GeometryModel>
+    
     let createdGraphicOverlay = GraphicsOverlay()
     let creatingGraphicOverlay = GraphicsOverlay()
+    var savedGraphics: [Graphic] {
+        savedGeometries.compactMap { geometryModel -> Graphic? in
+            guard let geometryString = geometryModel.geometryString, let geometry = try? Geometry.fromJSON(geometryString) else {
+                return nil
+            }
+            
+            if let point = geometry as? Point {
+                return Graphic(geometry: point, attributes: [:], symbol: SimpleMarkerSymbol(style: .circle, color: .red, size: 10.0))
+            } else if let polyline = geometry as? Polyline {
+                let line = SimpleLineSymbol(style: .solid, color: .blue, width: 1)
+                return Graphic(geometry: polyline, attributes: [:], symbol: line)
+            } else if let polygon = geometry as? Polygon {
+                let outline = SimpleLineSymbol(style: .solid, color: .green, width: 1)
+                let symbol = SimpleFillSymbol(style: .solid, color: .green.withAlphaComponent(0.5), outline: outline)
+                return Graphic(geometry: polygon, attributes: [:], symbol: symbol)
+            }
+            
+            return nil
+        }
+    }
     
     @State private var map = {
         let map = Map(basemapStyle: .arcGISTopographic)
@@ -30,7 +57,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            MapView(map: map, graphicsOverlays: [createdGraphicOverlay, creatingGraphicOverlay])
+            MapView(map: map, graphicsOverlays: [GraphicsOverlay(graphics: savedGraphics), createdGraphicOverlay, creatingGraphicOverlay])
                 .onSingleTapGesture { (cgPoint, mapPoint) in
                     guard let createType else {
                         return
@@ -38,7 +65,8 @@ struct ContentView: View {
                     
                     switch createType {
                     case .point:
-                        createdGraphicOverlay.addGraphic(Graphic(geometry: mapPoint, attributes: [:], symbol: SimpleMarkerSymbol(style: .circle, color: .orange, size: 10.0)))
+                        creatingGraphicOverlay.removeAllGraphics()
+                        creatingGraphicOverlay.addGraphic(Graphic(geometry: mapPoint, attributes: [:], symbol: SimpleMarkerSymbol(style: .circle, color: .orange, size: 10.0)))
                     case .polyline:
                         points.append(mapPoint)
                         creatingGraphicOverlay.removeAllGraphics()
@@ -76,12 +104,12 @@ struct ContentView: View {
                 points = []
             }
             Button("Save") {
-                if let graphic = creatingGraphicOverlay.graphics.first {
+                if let graphic = creatingGraphicOverlay.graphics.first, let geometry = graphic.geometry {
                     creatingGraphicOverlay.removeGraphic(graphic)
                     
                     switch createType {
                     case .point:
-                        break
+                        graphic.symbol = SimpleMarkerSymbol(style: .circle, color: .red, size: 10.0)
                     case .polyline:
                         graphic.symbol = SimpleLineSymbol(style: .solid, color: .blue, width: 1)
                     case .polygon:
@@ -92,6 +120,17 @@ struct ContentView: View {
                     }
                     
                     createdGraphicOverlay.addGraphic(graphic)
+                    
+                    let geometryModel = GeometryModel(context: viewContext)
+                    geometryModel.id = UUID()
+                    geometryModel.geometryString = geometry.toJSON()
+                    geometryModel.createdOn = Date()
+                    
+                    do {
+                        try viewContext.save()
+                    } catch {
+                        print(error.localizedDescription)
+                    }
                 }
                 createType = nil
                 creatingGraphicOverlay.removeAllGraphics()

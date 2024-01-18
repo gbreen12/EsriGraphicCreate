@@ -12,6 +12,8 @@
 		574062572ADF793200F4F2FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 574062562ADF793200F4F2FF /* Assets.xcassets */; };
 		5740625A2ADF793200F4F2FF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 574062592ADF793200F4F2FF /* Preview Assets.xcassets */; };
 		574062622ADF798300F4F2FF /* ArcGIS in Frameworks */ = {isa = PBXBuildFile; productRef = 574062612ADF798300F4F2FF /* ArcGIS */; };
+		57BB7DC02B57836600693B66 /* EsriGeometryCreate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 57BB7DBE2B57836600693B66 /* EsriGeometryCreate.xcdatamodeld */; };
+		57BB7DC22B57851900693B66 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57BB7DC12B57851900693B66 /* Persistence.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		574062542ADF793200F4F2FF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		574062562ADF793200F4F2FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		574062592ADF793200F4F2FF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		57BB7DBF2B57836600693B66 /* EsriGeometryCreate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = EsriGeometryCreate.xcdatamodel; sourceTree = "<group>"; };
+		57BB7DC12B57851900693B66 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,8 +59,10 @@
 			children = (
 				574062522ADF793100F4F2FF /* EsriGeometryCreateApp.swift */,
 				574062542ADF793200F4F2FF /* ContentView.swift */,
+				57BB7DC12B57851900693B66 /* Persistence.swift */,
 				574062562ADF793200F4F2FF /* Assets.xcassets */,
 				574062582ADF793200F4F2FF /* Preview Content */,
+				57BB7DBE2B57836600693B66 /* EsriGeometryCreate.xcdatamodeld */,
 			);
 			path = EsriGeometryCreate;
 			sourceTree = "<group>";
@@ -146,6 +152,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				574062552ADF793200F4F2FF /* ContentView.swift in Sources */,
+				57BB7DC22B57851900693B66 /* Persistence.swift in Sources */,
+				57BB7DC02B57836600693B66 /* EsriGeometryCreate.xcdatamodeld in Sources */,
 				574062532ADF793100F4F2FF /* EsriGeometryCreateApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -371,6 +379,19 @@
 			productName = ArcGIS;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		57BB7DBE2B57836600693B66 /* EsriGeometryCreate.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				57BB7DBF2B57836600693B66 /* EsriGeometryCreate.xcdatamodel */,
+			);
+			currentVersion = 57BB7DBF2B57836600693B66 /* EsriGeometryCreate.xcdatamodel */;
+			path = EsriGeometryCreate.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 574062472ADF793100F4F2FF /* Project object */;
 }

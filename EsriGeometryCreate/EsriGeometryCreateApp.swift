@@ -10,6 +10,8 @@ import SwiftUI
 
 @main
 struct EsriGeometryCreateApp: App {
+    let persistenceController = PersistenceController.shared
+    
     init() {
         ArcGISEnvironment.apiKey = APIKey("")
     }
@@ -17,6 +19,7 @@ struct EsriGeometryCreateApp: App {
     var body: some SwiftUI.Scene {
         WindowGroup {
             ContentView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
